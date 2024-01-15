@@ -29,7 +29,7 @@ const siteProps = {
   email: "mosesmtengo@outlook.com",
   gitHub: "Kmtengo",
   instagram: "qurlarmah",
-  linkedIn: "Kalama Moses",
+  linkedIn: "kalama-moses-a405971b0/",
   medium: "",
   twitter: "qurlarmah",
   youTube: "qurlarmah",
