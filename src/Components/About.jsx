@@ -24,7 +24,7 @@ const imageAltText = "multi -color triangular mosaic patterns";
  * Sort description that expands on your title on the Home component.
  */
 const description =
-  "I'm a Software Engineering student studying at alX. I enjoy using my knowledge to build projects that are sustainable and leave a positive impact";
+  "I'm a Software Engineering student studying at Power Learn Project. I enjoy using my knowledge to build projects that are sustainable and leave a positive impact";
 
 /**
  * List of some of skills or technologies you work on, are learning,
@@ -36,6 +36,8 @@ const skillsList = [
   "Android Development",
   "Software Engineering",
   "Agile Product Development",
+  "Blockchain Technology",
+  "Artificial Intelligence"
 ];
 
 /**
