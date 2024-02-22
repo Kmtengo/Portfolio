@@ -24,7 +24,7 @@ const imageAltText = "multi -color triangular mosaic patterns";
  * Sort description that expands on your title on the Home component.
  */
 const description =
-  "I'm a lifelong Software Engineering student, continuosly in the pusruit of knowledge in emerging technologies. I'm passionate about using technology as an enabler to build solutions for Africa that are sustainable and leave a positive impact";
+  "I'm a lifelong Software Engineering student, continuosly in the pursuit of knowledge in emerging technologies. I'm passionate about using technology as an enabler to build solutions for Africa that are sustainable and leave a positive impact";
 
 /**
  * List of some of skills or technologies you work on, are learning,
