@@ -1,4 +1,4 @@
-/**
+o/**
  * Application component
  *
  * To contain application wide settings, routes, state, etc.
@@ -25,7 +25,7 @@ import "./styles.css";
  */
 const siteProps = {
   name: "Moses Mtengo",
-  title: "Software Engineer & Android Developer",
+  title: "Software Developer",
   email: "mosesmtengo@outlook.com",
   gitHub: "Kmtengo",
   instagram: "qurlarmah",
