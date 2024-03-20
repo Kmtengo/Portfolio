@@ -24,7 +24,7 @@ const imageAltText = "multi -color triangular mosaic patterns";
  * Sort description that expands on your title on the Home component.
  */
 const description =
-  "I'm a lifelong Software Engineering student, continuosly in the pursuit of knowledge in emerging technologies. I'm passionate about using technology as an enabler to build solutions for Africa that are sustainable and leave a positive impact";
+  "I am a Software Developer with a deep passion for Technology and Innovation. I'm constantly involved in applying my knowledge in technology to develop transformative solutions for Africa.";
 
 /**
  * List of some of skills or technologies you work on, are learning,
@@ -43,7 +43,7 @@ const skillsList = [
  * about you on a professional level.
  */
 const detailOrQuote =
-  "I am passionate about solving problems in new creative ways to drive innovation and economic empowerment. By leveraging my software development and leadership experience, I continually look for new and better ways to make tech accessible by all.";
+  "I am passionate about solving problems in new creative ways to drive positive change and economic empowerment. By leveraging my software development and leadership experience, I continually look for new and better ways to make tech accessible by all.";
 
 const About = () => {
   return (
