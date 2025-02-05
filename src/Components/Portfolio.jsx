@@ -31,6 +31,12 @@ const imageAltText = "a wooden coding setup";
  */
 const projectList = [
   {
+    title: "✨Dive into Markdown Magic!",
+    description:
+      "I wrote an article to help students learn about Markdown, it's awesome capabilites and how to use it.",
+    url: "https://dev.to/qurlarmah/dive-into-markdown-magic-24m4",
+  },
+  {
     title: "10 Things To Know About Azure Static Web Apps 🎉",
     description:
       "Collaboration to create a beginner friendly article to help explain Azure Static Web Apps and tooling to get started.",
@@ -41,12 +47,6 @@ const projectList = [
     description:
       "Contributed sketch note imagery to accompany each lesson. These help provide visual representation of what is being taught.",
     url: "https://github.com/microsoft/web-dev-for-beginners",
-  },
-  {
-    title: "My Resume Site",
-    description:
-      "Created from Microsoft's resume workshop and deployed to GitHub pages. Includes my experience and design abilities.",
-    url: "https://github.com/microsoft/workshop-library/tree/main/full/build-resume-website",
   },
   {
     title: "GitHub Codespaces and github.dev",
