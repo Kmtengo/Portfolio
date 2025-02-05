@@ -14,13 +14,12 @@ Welcome to my portfolio repository! This repository showcases my projects, skill
 I am a passionate developer with experience in various technologies and a strong desire to learn and grow. This portfolio highlights some of the work I have done and the skills I have acquired.
 
 ## Projects
-
-### Project 1: [NHIS]
+### Project 1: NHIS
 - **Description:** The National Health Integrated System is a centralized and integrated healthcare management system.
 - **Technologies Used:** HTML5, CSS3, JavaScript, Bootstrap, Microsoft Azure, Llama
 - **Link:** [GitHub Repository](https://github.com/Kmtengo/NHIS)
 
-### Project 2: [Podcast Feed Generator]
+### Project 2: Podcast Feed Generator
 - **Description:** A podcast feed generator that generates XML using a YAML file that is parsed using Python.
 - **Technologies Used:** Python, Docker, Shell, YAML, XML, GitHub Actions
 - **Link:** [GitHub Repository](https://github.com/Kmtengo/podcast-feed-generator)
