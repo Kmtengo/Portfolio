@@ -24,7 +24,7 @@ const imageAltText = "multi -color triangular mosaic patterns";
  * Sort description that expands on your title on the Home component.
  */
 const description =
-  "I am a Software Developer with a deep passion for Technology and Innovation. I'm constantly involved in applying my knowledge in technology to develop transformative solutions for Africa.";
+  "I am a Software Developer with a deep passion for Technology and Innovation. I'm currently involved in applying my knowledge in technology to develop transformative solutions for Africa.";
 
 /**
  * List of some of skills or technologies you work on, are learning,
