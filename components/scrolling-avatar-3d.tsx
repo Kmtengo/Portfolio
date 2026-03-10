@@ -98,10 +98,10 @@ export default function ScrollingAvatar3D() {
 
     // Animation loop
     let time = 0
-    const clock = new THREE.Clock()
+    const timer = new THREE.Timer()
 
     const animate = () => {
-      time += clock.getDelta()
+      time = timer.getElapsed()
       const progress = scrollProgress.value
 
       // Interpolate position along path
@@ -147,7 +147,6 @@ export default function ScrollingAvatar3D() {
           cancelAnimationFrame(animationFrameRef.current)
         }
       } else {
-        clock.getDelta() // Reset delta
         animate()
       }
     }
