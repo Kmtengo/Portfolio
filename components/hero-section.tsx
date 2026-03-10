@@ -1,19 +1,39 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, useId } from "react"
 import Image from "next/image"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { motion, AnimatePresence } from "motion/react"
+import { motion, AnimatePresence, useAnimationControls } from "motion/react"
 import StaggeredText from "./staggered-text"
 import TerminalInput from "./terminal-input"
+import { Volume2 } from "lucide-react"
 
 gsap.registerPlugin(ScrollTrigger)
 
-// ─── Static monogram SVG (grey → teal on hover) ─────────────────────────────
+// ─── Animated monogram (fill-reveal teal on hover, runs once per hover) ──────
 function MonogramMark({ className }: { className?: string }) {
-  const [hovered, setHovered] = useState(false)
-  const color = hovered ? "#5EEAD4" : "#64748B"
+  const clipId = useId().replace(/:/g, "")
+  const controls = useAnimationControls()
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  const handleHover = async () => {
+    if (isAnimating) return
+    setIsAnimating(true)
+    await controls.start({
+      y: 0,
+      transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+    })
+    setIsAnimating(false)
+  }
+
+  const handleLeave = async () => {
+    if (isAnimating) return
+    await controls.start({
+      y: "100%",
+      transition: { duration: 0.5, ease: [0.76, 0, 0.24, 1] },
+    })
+  }
 
   return (
     <svg
@@ -21,54 +41,50 @@ function MonogramMark({ className }: { className?: string }) {
       className={className}
       xmlns="http://www.w3.org/2000/svg"
       aria-label="QM Monogram"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ cursor: "default", transition: "color 0.3s" }}
+      onMouseEnter={handleHover}
+      onMouseLeave={handleLeave}
+      style={{ cursor: "default", overflow: "visible" }}
     >
-      {/* M — Left Triangle */}
-      <polygon
-        points="40,200 80,80 120,200"
-        fill={color}
-        stroke={color}
-        strokeWidth="12"
+      <defs>
+        {/* Clip path that reveals from bottom to top */}
+        <clipPath id={`fill-clip-${clipId}`}>
+          <motion.rect
+            x="0"
+            y="0"
+            width="240"
+            height="240"
+            initial={{ y: "100%" }}
+            animate={controls}
+          />
+        </clipPath>
+      </defs>
+
+      {/* Grey base layer (always visible) */}
+      <g fill="#64748B" stroke="#64748B" strokeLinejoin="round" strokeLinecap="round">
+        <polygon points="40,200 80,80 120,200" strokeWidth="12" />
+        <polygon points="100,200 140,80 180,200" strokeWidth="12" style={{ opacity: 0.75 }} />
+        <circle cx="140" cy="130" r="50" fill="none" strokeWidth="16" />
+        <line x1="170" y1="160" x2="210" y2="200" strokeWidth="16" />
+      </g>
+
+      {/* Teal fill layer — revealed by clip from bottom upward */}
+      <g
+        fill="#5EEAD4"
+        stroke="#5EEAD4"
         strokeLinejoin="round"
-        style={{ transition: "fill 0.3s, stroke 0.3s" }}
-      />
-      {/* M — Right Triangle */}
-      <polygon
-        points="100,200 140,80 180,200"
-        fill={color}
-        stroke={color}
-        strokeWidth="12"
-        strokeLinejoin="round"
-        style={{ opacity: 0.75, transition: "fill 0.3s, stroke 0.3s" }}
-      />
-      {/* Q — Circle */}
-      <circle
-        cx="140"
-        cy="130"
-        r="50"
-        fill="none"
-        stroke={color}
-        strokeWidth="16"
-        style={{ transition: "stroke 0.3s" }}
-      />
-      {/* Q — Tail */}
-      <line
-        x1="170"
-        y1="160"
-        x2="210"
-        y2="200"
-        stroke={color}
-        strokeWidth="16"
         strokeLinecap="round"
-        style={{ transition: "stroke 0.3s" }}
-      />
+        clipPath={`url(#fill-clip-${clipId})`}
+      >
+        <polygon points="40,200 80,80 120,200" strokeWidth="12" />
+        <polygon points="100,200 140,80 180,200" strokeWidth="12" style={{ opacity: 0.75 }} />
+        <circle cx="140" cy="130" r="50" fill="none" strokeWidth="16" />
+        <line x1="170" y1="160" x2="210" y2="200" strokeWidth="16" />
+      </g>
     </svg>
   )
 }
 
-// ─── Wavy organic background ─────────────────────────────────────────────────
+// ─── Wavy organic background ──────────────────────────────────────────────────
 function WavyBackground() {
   return (
     <svg
@@ -131,12 +147,8 @@ function InfoCard({ visible }: { visible: boolean }) {
             <line x1="20" y1="26" x2="20" y2="36" stroke="#5EEAD4" strokeWidth="1.5" strokeDasharray="2 2" />
           </svg>
         </div>
-        <p
-          className="font-display text-xs font-bold leading-tight tracking-wide"
-          style={{ color: "#5EEAD4" }}
-        >
-          SCALABLE UI
-          <br />SYSTEMS
+        <p className="font-display text-xs font-bold leading-tight tracking-wide" style={{ color: "#5EEAD4" }}>
+          SCALABLE UI<br />SYSTEMS
         </p>
         <div className="flex items-center gap-2">
           <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 shrink-0" aria-hidden="true">
@@ -144,8 +156,7 @@ function InfoCard({ visible }: { visible: boolean }) {
             <path d="M10 6v4l3 2" stroke="#94A3B8" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
           <p className="font-mono text-[10px] leading-tight" style={{ color: "#94A3B8" }}>
-            REACT / TS
-            <br />SINCE 2019
+            REACT / TS<br />SINCE 2019
           </p>
         </div>
       </div>
@@ -177,7 +188,6 @@ const menuImages = [
 ]
 
 function DashboardMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
-  // Lock body scroll when open
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden"
     else document.body.style.overflow = ""
@@ -211,12 +221,12 @@ function DashboardMenu({ open, onClose }: { open: boolean; onClose: () => void }
             </g>
           </svg>
 
-          {/* ── Left: 2×2 image grid ── */}
-          <div className="relative z-10 w-full md:w-1/2 grid grid-cols-2 grid-rows-2 gap-1 p-1 h-64 md:h-full">
+          {/* ── Left: 2×2 image grid with increased gap ── */}
+          <div className="relative z-10 w-full md:w-1/2 grid grid-cols-2 grid-rows-2 gap-5 p-5 h-64 md:h-full">
             {menuImages.map((img, i) => (
               <motion.div
                 key={img.src}
-                className="relative overflow-hidden"
+                className="relative overflow-hidden rounded-sm"
                 initial={{ opacity: 0, scale: 1.05 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 + i * 0.08, ease: "easeOut" }}
@@ -233,14 +243,15 @@ function DashboardMenu({ open, onClose }: { open: boolean; onClose: () => void }
             ))}
           </div>
 
-          {/* ── Right: nav links + footer ── */}
-          <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-between px-10 md:px-16 py-10 md:py-14">
-            {/* Nav links */}
-            <nav aria-label="Dashboard navigation">
-              <ul className="flex flex-col gap-2 md:gap-3">
+          {/* ── Right: nav links + footer, centered ── */}
+          <div className="relative z-10 w-full md:w-1/2 flex flex-col justify-between items-center px-10 md:px-16 py-10 md:py-14">
+            {/* Nav links — centered */}
+            <nav aria-label="Dashboard navigation" className="w-full flex flex-col items-center">
+              <ul className="flex flex-col gap-1 md:gap-2 items-center w-full">
                 {navLinks.map((link, i) => (
                   <motion.li
                     key={link.href}
+                    className="w-full text-center"
                     initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: 0.25 + i * 0.07, ease: "easeOut" }}
@@ -248,9 +259,9 @@ function DashboardMenu({ open, onClose }: { open: boolean; onClose: () => void }
                     <a
                       href={link.href}
                       onClick={onClose}
-                      className="font-display font-black leading-none tracking-tight text-balance block"
+                      className="font-display font-black leading-none tracking-tight text-balance block w-full"
                       style={{
-                        fontSize: "clamp(2.8rem, 7vw, 6rem)",
+                        fontSize: "clamp(1.8rem, 4.5vw, 3.8rem)",
                         color: "#F1F5F9",
                         transition: "color 0.2s",
                       }}
@@ -264,20 +275,20 @@ function DashboardMenu({ open, onClose }: { open: boolean; onClose: () => void }
               </ul>
             </nav>
 
-            {/* Footer row: enquiries + socials */}
+            {/* Footer row: enquiries + socials, centered */}
             <motion.div
-              className="flex flex-col gap-4 mt-8"
+              className="flex flex-col items-center gap-4 mt-8 w-full"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.65, ease: "easeOut" }}
             >
               <p
-                className="font-display text-xs font-bold tracking-[0.2em]"
+                className="font-display text-xs font-bold tracking-[0.2em] text-center"
                 style={{ color: "#F1F5F9" }}
               >
                 BUSINESS ENQUIRIES
               </p>
-              <div className="flex flex-wrap gap-6">
+              <div className="flex flex-wrap justify-center gap-6">
                 {socialLinks.map((s) => (
                   <a
                     key={s.label}
@@ -299,6 +310,85 @@ function DashboardMenu({ open, onClose }: { open: boolean; onClose: () => void }
   )
 }
 
+// ─── Top-left name with hover-reveal pronunciation ────────────────────────────
+function NameWithPronunciation({ visible }: { visible: boolean }) {
+  const [isRevealed, setIsRevealed] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  const handlePlayAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0
+      audioRef.current.play().catch(() => {})
+    }
+  }
+
+  const nameStyle: React.CSSProperties = {
+    color: "#F1F5F9",
+    fontSize: "clamp(1.5rem, 3.5vw, 2.75rem)",
+  }
+
+  return (
+    <div
+      className="absolute top-6 left-8 md:top-8 md:left-14 z-20"
+      style={{
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.6s ease 0.4s",
+      }}
+    >
+      {/* QURLARMAH — hover to reveal pronunciation */}
+      <div
+        className="relative flex items-center gap-3 cursor-default"
+        onMouseEnter={() => setIsRevealed(true)}
+        onMouseLeave={() => setIsRevealed(false)}
+      >
+        <StaggeredText
+          text="QURLARMAH"
+          className="font-display font-black leading-none tracking-tight"
+          style={nameStyle}
+          delay={0.3}
+        />
+
+        {/* Pronunciation reveal */}
+        <div
+          className="flex items-center gap-2 overflow-hidden transition-all duration-500 ease-out"
+          style={{
+            width: isRevealed ? "200px" : "0px",
+            opacity: isRevealed ? 1 : 0,
+            whiteSpace: "nowrap",
+          }}
+        >
+          <button
+            onClick={handlePlayAudio}
+            className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 hover:bg-teal-400/20"
+            style={{ border: "1px solid #5EEAD4", color: "#5EEAD4" }}
+            aria-label="Play name pronunciation"
+          >
+            <Volume2 size={12} />
+          </button>
+          <span
+            className="font-mono text-[11px]"
+            style={{ color: "#FFFFFF" }}
+          >
+            qurl&middot;arm&middot;ah [ka&apos;la:ma]
+          </span>
+        </div>
+      </div>
+
+      {/* MOSES */}
+      <StaggeredText
+        text="MOSES"
+        className="font-display font-black leading-none tracking-tight"
+        style={nameStyle}
+        delay={0.5}
+      />
+
+      <audio ref={audioRef} preload="auto">
+        <source src="/audio/qurlarmah-pronunciation.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+  )
+}
+
 // ─── Hero Section ─────────────────────────────────────────────────────────────
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -308,13 +398,11 @@ export default function HeroSection() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [showSunnies, setShowSunnies] = useState(false)
 
-  // Wait for preloader to finish (~3s)
   useEffect(() => {
     const timer = setTimeout(() => setIsReady(true), 3200)
     return () => clearTimeout(timer)
   }, [])
 
-  // Portrait reveal
   useEffect(() => {
     if (!isReady || !portraitRef.current) return
     gsap.fromTo(
@@ -324,7 +412,6 @@ export default function HeroSection() {
     )
   }, [isReady])
 
-  // GSAP ScrollTrigger exit
   useEffect(() => {
     if (!sectionRef.current || !stickyRef.current) return
     const ctx = gsap.context(() => {
@@ -353,34 +440,14 @@ export default function HeroSection() {
         className="relative min-h-[200vh]"
         style={{ backgroundColor: "#111112" }}
       >
-        <div
-          ref={stickyRef}
-          className="sticky top-0 h-screen w-full overflow-hidden"
-        >
+        <div ref={stickyRef} className="sticky top-0 h-screen w-full overflow-hidden">
           {/* Decorative wavy background */}
           <WavyBackground />
 
-          {/* Top-left: Stacked name */}
-          <div className="absolute top-6 left-8 md:top-8 md:left-14 z-20">
-            {isReady && (
-              <>
-                <StaggeredText
-                  text="QURLARMAH"
-                  className="font-display font-black leading-none tracking-tight text-balance"
-                  style={{ color: "#F1F5F9", fontSize: "clamp(1.5rem, 3.5vw, 2.75rem)" } as React.CSSProperties}
-                  delay={0.3}
-                />
-                <StaggeredText
-                  text="MOSES"
-                  className="font-display font-black leading-none tracking-tight text-balance"
-                  style={{ color: "#F1F5F9", fontSize: "clamp(1.5rem, 3.5vw, 2.75rem)" } as React.CSSProperties}
-                  delay={0.5}
-                />
-              </>
-            )}
-          </div>
+          {/* Top-left: Name with pronunciation on hover */}
+          <NameWithPronunciation visible={isReady} />
 
-          {/* Top-center: Static monogram (grey → teal on hover) */}
+          {/* Top-center: Animated monogram */}
           <div
             className="absolute top-4 left-1/2 -translate-x-1/2 z-20"
             style={{
@@ -391,17 +458,18 @@ export default function HeroSection() {
             <MonogramMark className="w-10 h-10 md:w-12 md:h-12" />
           </div>
 
-          {/* Top-right: Dashboard menu button */}
+          {/* Top-right: Dashboard menu button — white X, rounded-corners square */}
           <div className="absolute top-5 right-8 md:top-7 md:right-14 z-[210]">
             <button
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
-              className="flex items-center justify-center w-11 h-11 rounded-full transition-colors duration-200"
+              className="flex items-center justify-center w-11 h-11 transition-colors duration-200"
               style={{
                 backgroundColor: "rgba(30,30,31,0.8)",
-                border: "1px solid #2D2D2E",
+                border: "1px solid rgba(255,255,255,0.25)",
+                borderRadius: "8px",
                 backdropFilter: "blur(8px)",
-                color: "#F1F5F9",
+                color: "#FFFFFF",
               }}
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -471,16 +539,10 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Sunglasses easter egg overlay */}
+          {/* Sunglasses easter egg */}
           {showSunnies && (
-            <div
-              className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none"
-              style={{ animation: "fadeIn 0.5s ease forwards" }}
-            >
-              <p
-                className="font-mono text-6xl"
-                style={{ color: "#5EEAD4", textShadow: "0 0 20px rgba(94,234,212,0.6)" }}
-              >
+            <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
+              <p className="font-mono text-6xl" style={{ color: "#5EEAD4", textShadow: "0 0 20px rgba(94,234,212,0.6)" }}>
                 8-)
               </p>
             </div>
@@ -490,15 +552,9 @@ export default function HeroSection() {
           {isReady && (
             <div
               className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20"
-              style={{
-                opacity: isReady ? 1 : 0,
-                transition: "opacity 0.6s ease 1.4s",
-              }}
+              style={{ opacity: 1, transition: "opacity 0.6s ease 1.4s" }}
             >
-              <TerminalInput
-                onSunnies={() => setShowSunnies(true)}
-                onInit={() => {}}
-              />
+              <TerminalInput onSunnies={() => setShowSunnies(true)} onInit={() => {}} />
             </div>
           )}
 
