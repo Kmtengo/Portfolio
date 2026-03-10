@@ -5,10 +5,11 @@ import { motion } from "motion/react"
 import gsap from "gsap"
 
 export default function Preloader() {
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const overlayRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    setIsLoading(true)
     document.body.style.overflow = "hidden"
 
     const timer = setTimeout(() => {
