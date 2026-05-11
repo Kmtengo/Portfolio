@@ -63,8 +63,8 @@ export default function Header() {
               <a
                 key={link.href}
                 href={link.href}
-                className="font-sans text-sm tracking-wide transition-colors duration-200"
-                style={{ color: "#94A3B8" }}
+                className="font-sans text-sm font-medium uppercase transition-colors duration-200"
+                style={{ color: "#94A3B8", letterSpacing: "0.1em" }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.color = "#5EEAD4")
                 }
@@ -129,7 +129,7 @@ export default function Header() {
                   >
                     <a
                       href={link.href}
-                      className="font-display text-3xl md:text-5xl font-bold tracking-wide transition-colors duration-200"
+                      className="font-display text-4xl md:text-6xl font-bold uppercase tracking-wide transition-colors duration-200"
                       style={{ color: "#F1F5F9" }}
                       onMouseEnter={(e) =>
                         (e.currentTarget.style.color = "#5EEAD4")
@@ -153,9 +153,9 @@ export default function Header() {
                 className="mt-12 flex justify-center gap-6"
               >
                 {[
-                  { label: "GitHub", href: "#" },
-                  { label: "LinkedIn", href: "#" },
-                  { label: "Twitter/X", href: "#" },
+                  { label: "GitHub", href: "https://github.com/Kmtengo" },
+                  { label: "LinkedIn", href: "https://linkedin.com/in/qurlarmah" },
+                  { label: "X", href: "https://x.com/qurlarmah" },
                 ].map((social) => (
                   <a
                     key={social.label}
@@ -173,6 +173,17 @@ export default function Header() {
                   </a>
                 ))}
               </motion.div>
+
+              <motion.p
+                variants={{
+                  open: { opacity: 1, y: 0 },
+                  closed: { opacity: 0, y: 20 },
+                }}
+                className="mt-8 text-xs"
+                style={{ color: "#94A3B8" }}
+              >
+                Engineering scalable UI since 2019
+              </motion.p>
             </motion.nav>
           </motion.div>
         )}

@@ -5,13 +5,14 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import SteamFramePortrait from "./steam-frame-portrait"
 
+gsap.registerPlugin(ScrollTrigger)
+
 interface CommunityRole {
   title: string
   organization: string
   stat: string
   statLabel: string
   description: string
-  imagePlaceholder: string
 }
 
 const communityRoles: CommunityRole[] = [
@@ -19,28 +20,25 @@ const communityRoles: CommunityRole[] = [
     title: "Microsoft Learn Student Ambassador",
     organization: "Gold Status",
     stat: "60+",
-    statLabel: "Azure Certifications Facilitated",
+    statLabel: "Azure Certs",
     description:
-      "Hands-on training in developer technologies, organizing workshops and certification bootcamps for aspiring cloud engineers.",
-    imagePlaceholder: "/images/community/mlsa.jpg",
+      "Organizing workshops and certification bootcamps for aspiring cloud engineers.",
   },
   {
     title: "Google Developer Student Club Lead",
     organization: "Compose Camp",
     stat: "250+",
-    statLabel: "Members Skilled",
+    statLabel: "Members",
     description:
-      "Led a 3-month skilling campaign in Android development and Jetpack Compose, growing the club to 250+ active members.",
-    imagePlaceholder: "/images/community/gdsc.jpg",
+      "Led 3-month skilling campaign in Android development and Jetpack Compose.",
   },
   {
     title: "MksU Hackfest Convener",
     organization: "Lead Organizer",
     stat: "200+",
-    statLabel: "Developers Upskilled",
+    statLabel: "Devs Upskilled",
     description:
-      "Organized and led a 3-day hackathon facilitating 15+ sustainability projects and upskilling 200+ developers.",
-    imagePlaceholder: "/images/community/hackfest.jpg",
+      "Organized 3-day hackathon: 15+ sustainability projects and 200+ developers.",
   },
 ]
 
@@ -52,25 +50,18 @@ export default function CommunitySection() {
     if (!sectionRef.current) return
 
     const ctx = gsap.context(() => {
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return
-
-        gsap.fromTo(
-          card,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.7,
-            ease: "power3.out",
-            delay: index * 0.15,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          }
-        )
+      const cards = cardsRef.current.filter(Boolean)
+      gsap.from(cards, {
+        y: 50,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.15,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+          once: true,
+        },
       })
     }, sectionRef)
 
@@ -82,96 +73,105 @@ export default function CommunitySection() {
       ref={sectionRef}
       id="community"
       className="relative py-24 md:py-32"
-      style={{ backgroundColor: "#111112" }}
+      style={{ backgroundColor: "#F5F1E8" }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
         {/* Section Header */}
-        <div className="mb-16 md:mb-24 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
-          <div>
-            <h2
-              className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4"
-              style={{ color: "#F1F5F9" }}
-            >
-              Community Ecosystem
-            </h2>
-            <p
-              className="font-sans text-lg max-w-xl"
-              style={{ color: "#94A3B8" }}
-            >
-              Beyond the code — mentoring, organizing, and building developer
-              communities that matter.
-            </p>
-          </div>
-
-          {/* Steam Frame Portrait */}
-          <div className="flex-shrink-0">
-            <SteamFramePortrait />
-          </div>
+        <div className="mb-16 md:mb-20">
+          <h2 className="mb-2 font-display text-4xl font-bold md:text-6xl lg:text-7xl">
+            <span style={{ color: "#0F172A" }}>Community </span>
+            <span style={{ color: "#008080" }}>Ecosystem</span>
+          </h2>
+          <p
+            className="mt-4 font-sans text-lg"
+            style={{ color: "#0F172A", opacity: 0.7 }}
+          >
+            Qurlarmah Moses &middot; 24 y.o
+          </p>
         </div>
 
-        {/* Community Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Community Grid — 3 columns */}
+        <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-3">
           {communityRoles.map((role, index) => (
             <div
               key={role.title}
-              ref={(el) => {
-                cardsRef.current[index] = el
-              }}
-              className="group rounded-xl overflow-hidden transition-all duration-300"
+              ref={(el) => { cardsRef.current[index] = el }}
+              className="overflow-hidden rounded-2xl transition-all duration-300"
               style={{
-                backgroundColor: "#282828",
-                border: "1px solid #2D2D2E",
+                backgroundColor: "white",
+                border: "2px solid rgba(15, 23, 42, 0.1)",
               }}
             >
-              {/* Image Placeholder */}
+              {/* Image area with stat overlay */}
               <div
-                className="relative w-full h-48 overflow-hidden"
-                style={{ backgroundColor: "#1E1E1F" }}
+                className="relative flex h-48 items-center justify-center overflow-hidden rounded-t-xl"
+                style={{ backgroundColor: "#E8E4DB" }}
               >
-                {/* Stats Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <span
-                      className="font-mono text-4xl font-bold block"
-                      style={{ color: "#5EEAD4" }}
-                    >
-                      {role.stat}
-                    </span>
-                    <span
-                      className="font-sans text-xs"
-                      style={{ color: "#94A3B8" }}
-                    >
-                      {role.statLabel}
-                    </span>
-                  </div>
+                <div className="text-center">
+                  <span
+                    className="block font-mono text-4xl font-bold"
+                    style={{ color: "#008080" }}
+                  >
+                    {role.stat}
+                  </span>
+                  <span
+                    className="font-sans text-xs font-medium uppercase"
+                    style={{ color: "#0F172A", letterSpacing: "0.1em", opacity: 0.6 }}
+                  >
+                    {role.statLabel}
+                  </span>
                 </div>
               </div>
 
               {/* Content */}
               <div className="p-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <span
-                    className="text-xs font-mono px-2 py-0.5 rounded"
-                    style={{
-                      backgroundColor: "#014D4E",
-                      color: "#5EEAD4",
-                    }}
-                  >
-                    {role.organization}
-                  </span>
-                </div>
+                <span
+                  className="mb-2 inline-block rounded-md px-2 py-0.5 font-mono text-xs"
+                  style={{
+                    backgroundColor: "rgba(0, 128, 128, 0.1)",
+                    color: "#008080",
+                  }}
+                >
+                  {role.organization}
+                </span>
                 <h3
-                  className="font-display text-lg font-bold mb-2"
-                  style={{ color: "#F1F5F9" }}
+                  className="mb-2 font-display text-lg font-bold"
+                  style={{ color: "#0F172A" }}
                 >
                   {role.title}
                 </h3>
-                <p className="font-sans text-sm" style={{ color: "#94A3B8" }}>
+                <p
+                  className="font-sans text-sm leading-relaxed"
+                  style={{ color: "#0F172A", opacity: 0.7 }}
+                >
                   {role.description}
                 </p>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Bio Quote + Steam Frame Portrait */}
+        <div className="flex flex-col items-center gap-12 md:flex-row md:items-start md:gap-16">
+          {/* Bio Quote */}
+          <div className="flex-1">
+            <p
+              className="font-sans text-xl leading-relaxed md:text-2xl"
+              style={{ color: "#0F172A" }}
+            >
+              Since joining the developer community, I&apos;ve been all in —
+              upskilling students, chasing impact, and bringing the{" "}
+              <span className="font-bold" style={{ color: "#008080" }}>
+                fight to every hackathon
+              </span>
+              .
+            </p>
+          </div>
+
+          {/* Portrait */}
+          <div className="flex-shrink-0">
+            <SteamFramePortrait />
+          </div>
         </div>
       </div>
     </section>

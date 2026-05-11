@@ -3,57 +3,38 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { Github, Linkedin, Twitter, ExternalLink } from "lucide-react"
+import { Github, Linkedin, Twitter, Mail } from "lucide-react"
+
+gsap.registerPlugin(ScrollTrigger)
 
 const socialLinks = [
-  {
-    platform: "GitHub",
-    handle: "@qurlarmah",
-    href: "https://github.com",
-    icon: Github,
-    description: "Open source contributions and project repositories",
-  },
-  {
-    platform: "LinkedIn",
-    handle: "Qurlarmah Moses",
-    href: "https://linkedin.com",
-    icon: Linkedin,
-    description: "Professional network and career updates",
-  },
-  {
-    platform: "Twitter/X",
-    handle: "@qurlarmah",
-    href: "https://x.com",
-    icon: Twitter,
-    description: "Tech insights, community updates, and dev thoughts",
-  },
+  { label: "GitHub", href: "https://github.com/Kmtengo", icon: Github },
+  { label: "LinkedIn", href: "https://linkedin.com/in/qurlarmah", icon: Linkedin },
+  { label: "X", href: "https://x.com/qurlarmah", icon: Twitter },
+  { label: "Email", href: "mailto:hello@qurlarmah.dev", icon: Mail },
 ]
+
+// Fanned card rotations
+const fanAngles = [-8, -3, 3, 8]
 
 export default function SocialSection() {
   const sectionRef = useRef<HTMLElement>(null)
+  const cardsRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!sectionRef.current) return
 
     const ctx = gsap.context(() => {
-      const cards = sectionRef.current?.querySelectorAll(".social-card")
-      cards?.forEach((card, index) => {
-        gsap.fromTo(
-          card,
-          { y: 40, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            delay: index * 0.1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          }
-        )
+      gsap.from(".connect-heading", {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          once: true,
+        },
       })
     }, sectionRef)
 
@@ -63,69 +44,67 @@ export default function SocialSection() {
   return (
     <section
       ref={sectionRef}
+      id="contact"
       className="relative py-24 md:py-32"
       style={{
-        background:
-          "linear-gradient(180deg, #111112 0%, #014D4E 50%, #111112 100%)",
+        background: "linear-gradient(180deg, #F5F1E8 0%, #F5F1E8 60%, #5EEAD4 100%)",
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2
-            className="font-display text-4xl md:text-5xl font-bold mb-4"
-            style={{ color: "#F1F5F9" }}
-          >
-            Let&apos;s Connect
+      <div className="mx-auto max-w-7xl px-6 text-center md:px-12">
+        {/* Heading */}
+        <div className="connect-heading mb-16">
+          <h2 className="mb-4 font-display text-4xl font-bold md:text-6xl lg:text-7xl">
+            <span style={{ color: "#0F172A" }}>Connect With </span>
+            <span style={{ color: "#008080" }}>Qurlarmah</span>
           </h2>
-          <p className="font-sans text-lg" style={{ color: "#94A3B8" }}>
-            Find me across the web
-          </p>
         </div>
 
-        {/* Social Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        {/* Fanned Card Stack */}
+        <div
+          ref={cardsRef}
+          className="group relative mx-auto mb-16 flex h-64 w-48 items-center justify-center md:h-80 md:w-56"
+        >
+          {[0, 1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="absolute h-full w-full rounded-2xl transition-transform duration-500 group-hover:scale-105"
+              style={{
+                backgroundColor: i === 0 ? "#008080" : i === 1 ? "#014D4E" : i === 2 ? "#111112" : "#282828",
+                transform: `rotate(${fanAngles[i]}deg)`,
+                zIndex: 4 - i,
+                boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Subtitle */}
+        <p
+          className="mb-8 font-sans text-lg"
+          style={{ color: "#0F172A", opacity: 0.7 }}
+        >
+          Follow Qurlarmah on the web
+        </p>
+
+        {/* Social Links Row */}
+        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
           {socialLinks.map((social) => (
             <a
-              key={social.platform}
+              key={social.label}
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="social-card group p-6 rounded-xl transition-all duration-300 glow-accent-hover"
-              style={{
-                backgroundColor: "rgba(40, 40, 40, 0.6)",
-                border: "1px solid #2D2D2E",
-              }}
+              className="group/link flex items-center gap-2 font-sans text-sm font-bold uppercase transition-colors duration-300"
+              style={{ color: "#0F172A", letterSpacing: "0.15em" }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#008080"
+                e.currentTarget.style.color = "#008080"
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "#2D2D2E"
+                e.currentTarget.style.color = "#0F172A"
               }}
             >
-              <div className="flex items-center justify-between mb-4">
-                <social.icon size={24} style={{ color: "#5EEAD4" }} />
-                <ExternalLink
-                  size={16}
-                  style={{ color: "#94A3B8" }}
-                  className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
-                />
-              </div>
-              <h3
-                className="font-display text-lg font-bold mb-1"
-                style={{ color: "#F1F5F9" }}
-              >
-                {social.platform}
-              </h3>
-              <p
-                className="font-mono text-sm mb-2"
-                style={{ color: "#5EEAD4" }}
-              >
-                {social.handle}
-              </p>
-              <p className="font-sans text-xs" style={{ color: "#94A3B8" }}>
-                {social.description}
-              </p>
+              <social.icon size={18} />
+              {social.label}
             </a>
           ))}
         </div>

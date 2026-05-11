@@ -1,6 +1,7 @@
 import Header from "@/components/header"
 import NamePronunciation from "@/components/name-pronunciation"
 import HeroSection from "@/components/hero-section"
+import MissionStatement from "@/components/mission-statement"
 import InProductionSection from "@/components/in-production-section"
 import ProjectsHall from "@/components/projects-hall"
 import CaseStudiesSection from "@/components/case-studies-section"
@@ -16,6 +17,7 @@ export default function Home() {
       <Header />
       <NamePronunciation />
       <HeroSection />
+      <MissionStatement />
       <InProductionSection />
       <ProjectsHall />
       <CaseStudiesSection />

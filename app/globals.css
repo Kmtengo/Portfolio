@@ -10,6 +10,8 @@
   --atmosphere: #014D4E;           /* Midnight Teal */
   --text-primary: #F1F5F9;         /* Bone White */
   --text-muted: #94A3B8;           /* Slate 400 */
+  --bg-light: #F5F1E8;            /* Warm Cream */
+  --text-dark: #0F172A;           /* Carbon */
 
   /* === Shadcn/UI Token Mapping === */
   --foreground: #F1F5F9;
@@ -66,6 +68,8 @@
   --color-atmosphere: var(--atmosphere);
   --color-text-primary: var(--text-primary);
   --color-text-muted: var(--text-muted);
+  --color-bg-light: var(--bg-light);
+  --color-text-dark: var(--text-dark);
 
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -119,8 +123,10 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    @apply tracking-wide font-bold;
-    letter-spacing: 0.02em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
   }
 
   @media (prefers-reduced-motion: reduce) {

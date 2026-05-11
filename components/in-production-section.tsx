@@ -4,54 +4,32 @@ import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 
+gsap.registerPlugin(ScrollTrigger)
+
 interface Stat {
   value: number
   suffix: string
   label: string
-  description: string
 }
 
 const stats: Stat[] = [
-  {
-    value: 5,
-    suffix: "+",
-    label: "Global Awards",
-    description: "Hackathon victories including Imagine Cup EMEA World Finals",
-  },
-  {
-    value: 250,
-    suffix: "+",
-    label: "Developers Mentored",
-    description: "As Google Developer Student Club Lead over 3 months",
-  },
-  {
-    value: 95,
-    suffix: "%+",
-    label: "On-Time Delivery",
-    description: "Consistent delivery rate across ISE and Oasys-ke projects",
-  },
-  {
-    value: 200,
-    suffix: "+",
-    label: "Devs Upskilled",
-    description: "Through MksU Hackfest — 3 days, 15+ sustainability projects",
-  },
-  {
-    value: 60,
-    suffix: "+",
-    label: "Azure Certifications",
-    description: "Facilitated as Microsoft Learn Student Ambassador (Gold)",
-  },
+  { value: 5, suffix: "+", label: "Global Awards" },
+  { value: 250, suffix: "+", label: "Devs Mentored" },
+  { value: 95, suffix: "%+", label: "Delivery Rate" },
+  { value: 200, suffix: "+", label: "Devs Upskilled" },
+  { value: 60, suffix: "+", label: "Azure Certs" },
 ]
 
 export default function InProductionSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const countersRef = useRef<(HTMLSpanElement | null)[]>([])
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
     if (!sectionRef.current) return
 
     const ctx = gsap.context(() => {
+      // Counter animations
       stats.forEach((stat, index) => {
         const el = countersRef.current[index]
         if (!el) return
@@ -60,16 +38,31 @@ export default function InProductionSection() {
         gsap.to(obj, {
           value: stat.value,
           duration: 2,
-          ease: "power2.out",
+          ease: "power1.out",
           scrollTrigger: {
             trigger: el,
             start: "top 80%",
-            toggleActions: "play none none none",
+            once: true,
           },
           onUpdate: () => {
             el.textContent = Math.round(obj.value).toString() + stat.suffix
           },
         })
+      })
+
+      // Staggered card entrance
+      const cards = cardsRef.current.filter(Boolean)
+      gsap.from(cards, {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+          once: true,
+        },
       })
     }, sectionRef)
 
@@ -86,53 +79,55 @@ export default function InProductionSection() {
           "linear-gradient(180deg, #111112 0%, #014D4E 50%, #111112 100%)",
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
         {/* Section Header */}
         <div className="mb-16 md:mb-24">
-          <h2
-            className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4"
-            style={{ color: "#F1F5F9" }}
-          >
-            In Production
+          <h2 className="font-display text-4xl font-bold md:text-6xl lg:text-7xl">
+            <span style={{ color: "#F1F5F9" }}>In </span>
+            <span style={{ color: "#5EEAD4" }}>Production</span>
           </h2>
-          <p className="font-sans text-lg max-w-xl" style={{ color: "#94A3B8" }}>
-            Real-world metrics from shipping code, mentoring developers, and
-            building platforms at scale.
-          </p>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+        {/* Stats Grid — 5 columns on lg */}
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-3 md:gap-8 lg:grid-cols-5">
           {stats.map((stat, index) => (
             <div
               key={stat.label}
-              className="p-6 rounded-xl transition-all duration-300"
-              style={{
-                backgroundColor: "rgba(40, 40, 40, 0.5)",
-                border: "1px solid rgba(45, 45, 46, 0.5)",
-              }}
+              ref={(el) => { cardsRef.current[index] = el }}
+              className="text-center"
             >
               <span
-                ref={(el) => {
-                  countersRef.current[index] = el
-                }}
-                className="font-mono text-5xl md:text-6xl font-bold block mb-3"
-                style={{ color: "#5EEAD4" }}
+                ref={(el) => { countersRef.current[index] = el }}
+                className="mb-2 block font-mono text-5xl font-bold md:text-6xl"
+                style={{ color: "#5EEAD4", fontVariantNumeric: "tabular-nums" }}
               >
                 0{stat.suffix}
               </span>
-              <h3
-                className="font-display text-xl font-semibold mb-2"
-                style={{ color: "#F1F5F9" }}
+              <span
+                className="font-sans text-xs font-bold uppercase"
+                style={{ color: "#94A3B8", letterSpacing: "0.2em" }}
               >
                 {stat.label}
-              </h3>
-              <p className="font-sans text-sm" style={{ color: "#94A3B8" }}>
-                {stat.description}
-              </p>
+              </span>
             </div>
           ))}
         </div>
+
+        {/* Supporting quote */}
+        <p
+          className="mx-auto mt-16 max-w-2xl text-center font-sans text-xl italic leading-relaxed md:mt-24 md:text-2xl"
+          style={{ color: "#94A3B8" }}
+        >
+          Challenging the{" "}
+          <span className="font-bold not-italic" style={{ color: "#5EEAD4" }}>
+            limits
+          </span>
+          , winning projects. Bringing it all each and every{" "}
+          <span className="font-bold not-italic" style={{ color: "#5EEAD4" }}>
+            sprint
+          </span>
+          .
+        </p>
       </div>
     </section>
   )
